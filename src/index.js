@@ -11,10 +11,10 @@ import {
   ScrollView,
   Dimensions,
   TouchableOpacity,
-  ViewPagerAndroid,
   Platform,
   ActivityIndicator
 } from 'react-native'
+import ViewPager from '@react-native-community/viewpager'
 
 /**
  * Default styles
@@ -285,7 +285,7 @@ export default class extends Component {
 
     // only update the offset in state if needed, updating offset while swiping
     // causes some bad jumping / stuttering
-    if (!this.state.offset || width !== this.state.width || height !== this.state.height) {
+    if ((!this.state.offset || width !== this.state.width || height !== this.state.height) && !this.initialRender) {
       state.offset = offset
     }
 
@@ -649,7 +649,7 @@ export default class extends Component {
        )
     }
     return (
-      <ViewPagerAndroid ref={this.refScrollView}
+      <ViewPager ref={this.refScrollView}
         {...this.props}
         initialPage={this.props.loop ? this.state.index + 1 : this.state.index}
         onPageScrollStateChanged={this.onPageScrollStateChanged}
@@ -657,7 +657,7 @@ export default class extends Component {
         key={pages.length}
         style={[styles.wrapperAndroid, this.props.style]}>
         {pages}
-      </ViewPagerAndroid>
+      </ViewPager>
     )
   }
 
