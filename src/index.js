@@ -191,12 +191,7 @@ export default class extends Component {
    */
   autoplayTimer = null
   loopJumpTimer = null
-
-  componentWillReceiveProps (nextProps) {
-    if (!nextProps.autoplay && this.autoplayTimer) clearTimeout(this.autoplayTimer)
-    this.setState(this.initState(nextProps, this.props.index !== nextProps.index))
-  }
-
+  
   componentDidMount () {
     this.autoplay()
   }
@@ -206,9 +201,14 @@ export default class extends Component {
     this.loopJumpTimer && clearTimeout(this.loopJumpTimer)
   }
 
-  componentWillUpdate (nextProps, nextState) {
+  componentDidUpdate (prevProps, prevState) {
     // If the index has changed, we notify the parent via the onIndexChanged callback
-    if (this.state.index !== nextState.index) this.props.onIndexChanged(nextState.index)
+    if (this.state.index !== prevState.index) this.props.onIndexChanged(this.state.index)
+
+    if ((prevProps.autoPlay !== this.props.autoPlay) && (!this.props.autoplay && this.autoplayTimer)) {
+      clearTimeout(this.autoplayTimer)
+      this.setState(this.initState(this.props, this.props.index !== prevProps.index))
+    }
   }
 
   initState (props, updateIndex = false) {
